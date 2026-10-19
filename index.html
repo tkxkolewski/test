@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polski Konwerter — Rzeczywista i bezpieczna konwersja plików</title>
+  <meta name="description" content="Konwertuj dokumenty, pliki wideo, audio, obrazy, modele 3D, rysunki CAD i dane tabelaryczne. Prawdziwe operacje, pełna prywatność i automatyczne usuwanie plików.">
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#0F62FE',
+              hover: '#0043CE',
+              canvas: '#F8FAFC',
+              darkCanvas: '#0B0F19'
+            }
+          },
+          fontFamily: {
+            heading: ['"Space Grotesk"', 'sans-serif'],
+            body: ['"Inter"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Autorskie jednolite logo jako favicon -->
+  <link rel="icon" type="image/svg+xml" href="/static/brand-logo.svg">
+
+  <!-- Ikony Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Nowy styl redakcyjny (Polski Konwerter 2.0) -->
+  <link rel="stylesheet" href="./css/polski-konwerter-v2.css">
+</head>
+<body class="bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-800 dark:text-slate-200 antialiased min-h-screen flex flex-col justify-between transition-colors duration-200">
+
+  <!-- GÓRNY PASEK NAWIGACYJNY -->
+  <header class="sticky top-0 z-40 w-full bg-white/90 dark:bg-[#0B0F19]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+      
+      <!-- Centralne Jednolite Logo (BrandLogo) -->
+      <a href="#start" class="focus:outline-none focus:ring-2 focus:ring-[#0F62FE] rounded-lg">
+        <div class="brand-logo-slot" data-size="38"></div>
+      </a>
+
+      <!-- Menu nawigacyjne -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600 dark:text-slate-300">
+        <a href="#start" class="hover:text-slate-950 dark:hover:text-white transition-colors">Konwerter</a>
+        <a href="#popularne" class="hover:text-slate-950 dark:hover:text-white transition-colors">Popularne</a>
+        <a href="#kategorie" class="hover:text-slate-950 dark:hover:text-white transition-colors">Kategorie</a>
+        <a href="#katalog-formatow" class="hover:text-slate-950 dark:hover:text-white transition-colors">Wszystkie formaty</a>
+        <a href="#bezpieczenstwo" class="hover:text-slate-950 dark:hover:text-white transition-colors">Bezpieczeństwo</a>
+        <a href="#faq" class="hover:text-slate-950 dark:hover:text-white transition-colors">FAQ</a>
+      </nav>
+
+      <!-- Prawa strona nawigacji: Przełącznik motywu i przycisk startu -->
+      <div class="flex items-center gap-3">
+        <button 
+          id="theme-toggle-btn" 
+          aria-label="Przełącz motyw jasny / ciemny"
+          class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+        >
+          <span id="theme-icon-slot"></span>
+        </button>
+
+        <a 
+          href="#start" 
+          class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0F62FE] hover:bg-[#0043CE] text-white text-xs font-semibold shadow-sm transition-all"
+        >
+          <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+          <span>Wybierz plik</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- GŁÓWNA STRONA -->
+  <main class="flex-grow">
+
+    <!-- SEKCJA STARTOWA (HERO) -->
+    <section id="start" class="pt-14 pb-16 px-4 sm:px-6 max-w-4xl mx-auto text-center">
+      
+      <!-- Nagłówek i jednozdaniowy opis działania -->
+      <h1 class="text-3xl sm:text-5xl font-bold font-heading text-slate-900 dark:text-white tracking-tight mb-4 leading-tight">
+        Konwertuj pliki. Szybko, dokładnie i bezpiecznie.
+      </h1>
+      <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Wybierz plik z dysku, wskaż format docelowy i pobierz gotowy wynik. Rzeczywiste operacje na dokumentach, wideo, audio, tabelach i grafice.
+      </p>
+
+      <!-- GŁÓWNE POLE PRZESYŁANIA PLIKU (DOMINUJĄCE, JEDNOZNACZNE) -->
+      <div class="max-w-2xl mx-auto">
+        
+        <!-- Pole Dropzone w stanie oczekiwania -->
+        <div 
+          id="hero-dropzone" 
+          class="dropzone-field p-10 sm:p-14 text-center cursor-pointer transition-all"
+          onclick="document.getElementById('main-file-input').click()"
+        >
+          <input 
+            type="file" 
+            id="main-file-input" 
+            class="hidden" 
+            aria-label="Wybierz plik do konwersji"
+          />
+
+          <div class="flex flex-col items-center">
+            <div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[#0F62FE] flex items-center justify-center mb-5 shadow-sm">
+              <i data-lucide="arrow-up-circle" class="w-8 h-8"></i>
+            </div>
+            
+            <h2 class="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white mb-2">
+              Przeciągnij plik tutaj
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-sm">
+              lub kliknij przycisk poniżej, aby wybrać plik ze swojego urządzenia.
+            </p>
+
+            <button 
+              type="button" 
+              id="pick-file-btn"
+              class="px-6 py-3 rounded-xl bg-[#0F62FE] hover:bg-[#0043CE] text-white text-sm font-semibold shadow-sm flex items-center gap-2 transition-all"
+            >
+              <i data-lucide="folder" class="w-4 h-4"></i>
+              <span>Wybierz plik</span>
+            </button>
+          </div>
+
+          <!-- Informacje techniczne pod polem -->
+          <div class="mt-8 pt-6 border-t border-slate-200/80 dark:border-slate-700/60 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 dark:text-slate-400">
+            <span>Maksymalny rozmiar: 50 MB</span>
+            <span>•</span>
+            <span>Automatyczne usuwanie po 30 minutach</span>
+            <span>•</span>
+            <span>Bezpieczne przetwarzanie lokalne</span>
+          </div>
+        </div>
+
+        <!-- Aktywny panel konwersji (po dodaniu pliku) -->
+        <div id="active-converter-panel" class="hidden text-left">
+          <!-- Renderowane dynamicznie przez js/polski-konwerter-v2.js -->
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SEKCJA NAJPOPULARNIEJSZYCH KONWERSJI -->
+    <section id="popularne" class="py-14 px-4 sm:px-6 max-w-6xl mx-auto border-t border-slate-200 dark:border-slate-800">
+      <div class="mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white">Najczęstsze operacje</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Wybierz jedną z popularnych ścieżek, aby od razu wybrać plik i rozpocząć konwersję.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
+        
+        <!-- MP4 -> MP3 (Rzeczywiste FFmpeg) -->
+        <button data-from="mp4" data-to="mp3" class="popular-shortcut-btn p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#0F62FE] hover:shadow-sm text-left transition-all">
+          <div class="text-xs font-mono font-bold text-[#0F62FE] mb-1">MP4 na MP3</div>
+          <div class="text-sm font-semibold text-slate-900 dark:text-white">Ekstrakcja ścieżki audio</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Wideo na format dźwiękowy</div>
+        </button>
+
+        <!-- DOCX -> PDF -->
+        <button data-from="docx" data-to="pdf" class="popular-shortcut-btn p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#0F62FE] hover:shadow-sm text-left transition-all">
+          <div class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 mb-1">DOCX na PDF</div>
+          <div class="text-sm font-semibold text-slate-900 dark:text-white">Dokument Word na PDF</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Zachowanie akapitów i stron</div>
+        </button>
+
+        <!-- PDF -> TXT -->
+        <button data-from="pdf" data-to="txt" class="popular-shortcut-btn p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#0F62FE] hover:shadow-sm text-left transition-all">
+          <div class="text-xs font-mono font-bold text-slate-600 dark:text-slate-400 mb-1">PDF na TXT</div>
+          <div class="text-sm font-semibold text-slate-900 dark:text-white">Ekstrakcja czystego tekstu</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Wyodrębnienie treści z PDF</div>
+        </button>
+
+        <!-- JPG -> PNG -->
+        <button data-from="jpg" data-to="png" class="popular-shortcut-btn p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#0F62FE] hover:shadow-sm text-left transition-all">
+          <div class="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 mb-1">JPG na PNG</div>
+          <div class="text-sm font-semibold text-slate-900 dark:text-white">Konwersja bezstratna</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Optymalizacja ostrości grafiki</div>
+        </button>
+
+        <!-- PNG -> WEBP -->
+        <button data-from="png" data-to="webp" class="popular-shortcut-btn p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#0F62FE] hover:shadow-sm text-left transition-all">
+          <div class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 mb-1">PNG na WebP</div>
+          <div class="text-sm font-semibold text-slate-900 dark:text-white">Nowoczesna kompresja</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Lekka grafika na strony WWW</div>
+        </button>
+
+        <!-- CSV -> XLSX -->
+        <button data-from="csv" data-to="xlsx" class="popular-shortcut-btn p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#0F62FE] hover:shadow-sm text-left transition-all">
+          <div class="text-xs font-mono font-bold text-teal-600 dark:text-teal-400 mb-1">CSV na Excel</div>
+          <div class="text-sm font-semibold text-slate-900 dark:text-white">Budowa arkusza XLSX</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Formatowanie tabelaryczne</div>
+        </button>
+
+        <!-- CSV -> JSON -->
+        <button data-from="csv" data-to="json" class="popular-shortcut-btn p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#0F62FE] hover:shadow-sm text-left transition-all">
+          <div class="text-xs font-mono font-bold text-yellow-600 dark:text-yellow-400 mb-1">CSV na JSON</div>
+          <div class="text-sm font-semibold text-slate-900 dark:text-white">Transformacja danych</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Obiekty do baz danych i API</div>
+        </button>
+
+        <!-- DXF -> SVG (CAD) -->
+        <button data-from="dxf" data-to="svg" class="popular-shortcut-btn p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-[#0F62FE] hover:shadow-sm text-left transition-all">
+          <div class="text-xs font-mono font-bold text-rose-600 dark:text-rose-400 mb-1">DXF na SVG</div>
+          <div class="text-sm font-semibold text-slate-900 dark:text-white">Rysunek techniczny CAD</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Wektorowy eksport geometrii</div>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- SEKCJA 16 KATEGORII -->
+    <section id="kategorie" class="py-14 px-4 sm:px-6 max-w-6xl mx-auto border-t border-slate-200 dark:border-slate-800">
+      <div class="mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white">Kategorie plików</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Wybierz kategorię, aby zawęzić listę i sprawdzić dostępne formaty wyjściowe.
+        </p>
+      </div>
+
+      <div id="categories-list-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <!-- Renderowane przez polski-konwerter-v2.js -->
+      </div>
+    </section>
+
+    <!-- SEKCJA KATALOGU FORMATÓW -->
+    <section id="katalog-formatow" class="py-14 px-4 sm:px-6 max-w-6xl mx-auto border-t border-slate-200 dark:border-slate-800">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white">Katalog formatów</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Przeglądaj obsługiwane rozszerzenia oraz dozwolone cele transformacji.
+          </p>
+        </div>
+        <div id="formats-total-count" class="text-xs font-mono text-slate-500 dark:text-slate-400">
+          Ładowanie...
+        </div>
+      </div>
+
+      <!-- Wyszukiwarka i filtry -->
+      <div class="space-y-4 mb-6">
+        <div class="relative max-w-md">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input 
+            type="text" 
+            id="catalog-search-input"
+            placeholder="Szukaj formatu (np. .mp4, docx, djvu, svg)..." 
+            class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-[#0F62FE]"
+          />
+        </div>
+
+        <div class="flex flex-wrap gap-2 text-xs">
+          <button data-filter="all" class="filter-pill-btn px-3 py-1.5 rounded-lg bg-[#0F62FE] text-white font-medium transition-all">
+            Wszystkie
+          </button>
+          <button data-filter="popular" class="filter-pill-btn px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-all">
+            Popularne
+          </button>
+          <button data-filter="unusual" class="filter-pill-btn px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-all">
+            Nietypowe rozszerzenia
+          </button>
+          <button data-filter="available" class="filter-pill-btn px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-all">
+            Dostępne teraz
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabela formatów -->
+      <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-xs font-semibold text-slate-600 dark:text-slate-400">
+              <th class="py-3 px-4">Rozszerzenie</th>
+              <th class="py-3 px-4">Pełna nazwa</th>
+              <th class="py-3 px-4">Kategoria</th>
+              <th class="py-3 px-4">Dozwolone formaty docelowe</th>
+              <th class="py-3 px-4 text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody id="formats-table-body">
+            <!-- Renderowane przez polski-konwerter-v2.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SEKCJA BEZPIECZEŃSTWO I PRYWATNOŚĆ -->
+    <section id="bezpieczenstwo" class="py-14 px-4 sm:px-6 max-w-6xl mx-auto border-t border-slate-200 dark:border-slate-800">
+      <div class="mb-10 text-center max-w-xl mx-auto">
+        <h2 class="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white">Prywatność i bezpieczeństwo</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Architektura zaprojektowana w oparciu o zasadę najmniejszych uprawnień.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div class="w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#0F62FE] flex items-center justify-center mb-4">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-base font-semibold text-slate-900 dark:text-white mb-2">Weryfikacja sygnatur</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Pliki są weryfikowane na podstawie ich nagłówków binarnych (Magic Bytes). Zmiana rozszerzenia nie pozwala na ominięcie walidacji bezpieczeństwa.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div class="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mb-4">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-base font-semibold text-slate-900 dark:text-white mb-2">Automatyczne usuwanie</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Wszystkie pliki źródłowe i wynikowe są usuwane z serwera po 30 minutach. Treści dokumentów i plików nie są zapisywane w logach systemowych.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+          <div class="w-10 h-10 rounded-lg bg-purple-50 dark:bg-purple-950/60 text-purple-600 flex items-center justify-center mb-4">
+            <i data-lucide="lock" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-base font-semibold text-slate-900 dark:text-white mb-2">Izolacja zadań</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Zadania konwersji uruchamiane są w odrębnych katalogach z zabezpieczeniem przed wyjściem poza dozwoloną ścieżkę (Path Traversal) i atakami kompresji (Zip Bomb).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEKCJA FAQ -->
+    <section id="faq" class="py-14 px-4 sm:px-6 max-w-3xl mx-auto border-t border-slate-200 dark:border-slate-800">
+      <div class="mb-8 text-center">
+        <h2 class="text-xl sm:text-2xl font-bold font-heading text-slate-900 dark:text-white">Często zadawane pytania</h2>
+      </div>
+
+      <div class="space-y-3">
+        <details class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 group">
+          <summary class="font-semibold text-sm text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
+            <span>Czy muszę rejestrować konto, aby przekonwertować plik?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2.5 leading-relaxed">
+            Nie. Narzędzie jest dostępne od razu po otwarciu strony, bez konieczności logowania, podawania adresu e-mail ani instalowania wtyczek.
+          </p>
+        </details>
+
+        <details class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 group">
+          <summary class="font-semibold text-sm text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
+            <span>Jak działa ekstrakcja audio z pliku wideo (np. MP4 na MP3)?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2.5 leading-relaxed">
+            Aplikacja wykorzystuje silnik multimedialny FFmpeg, który wyodrębnia bezpośrednią ścieżkę dźwiękową z kontenera wideo i zapisuje ją w wybranym formacie audio (np. MP3 lub WAV). Jeżeli plik wideo nie zawiera ścieżki dźwiękowej, system zwróci czytelną informację.
+          </p>
+        </details>
+
+        <details class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 group">
+          <summary class="font-semibold text-sm text-slate-900 dark:text-white cursor-pointer list-none flex items-center justify-between">
+            <span>Dlaczego nie ma opcji konwersji DOCX na MP3?</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2.5 leading-relaxed">
+            Polski Konwerter zezwala wyłącznie na logiczne i technologicznie uzasadnione transformacje. Zamiana tekstu na mowę (TTS) to operacja syntezy głosu, a nie konwersja formatu dokumentu.
+          </p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- STOPKA (Z JEDNOLITYM BRANDLOGO) -->
+  <footer class="bg-white dark:bg-[#080C14] border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        
+        <!-- Identyfikacja (BrandLogo w stopce) -->
+        <div class="space-y-3">
+          <div class="brand-logo-slot" data-size="34"></div>
+          <p class="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+            Niezawodne i bezpieczne narzędzie internetowe do konwersji plików. Prawdziwe procesy, brak symulowanych wyników.
+          </p>
+        </div>
+
+        <!-- Kategorie -->
+        <div>
+          <div class="font-semibold text-sm text-slate-900 dark:text-white mb-3">Formaty</div>
+          <ul class="space-y-2">
+            <li><a href="#kategorie" class="hover:text-slate-900 dark:hover:text-white transition-colors">Dokumenty i PDF</a></li>
+            <li><a href="#kategorie" class="hover:text-slate-900 dark:hover:text-white transition-colors">Wideo i Audio</a></li>
+            <li><a href="#kategorie" class="hover:text-slate-900 dark:hover:text-white transition-colors">Arkusze i Tabele</a></li>
+            <li><a href="#kategorie" class="hover:text-slate-900 dark:hover:text-white transition-colors">Rysunki CAD i 3D</a></li>
+          </ul>
+        </div>
+
+        <!-- Bezpieczeństwo -->
+        <div>
+          <div class="font-semibold text-sm text-slate-900 dark:text-white mb-3">Zasady działania</div>
+          <ul class="space-y-2">
+            <li><a href="#bezpieczenstwo" class="hover:text-slate-900 dark:hover:text-white transition-colors">Weryfikacja sygnatur binarnych</a></li>
+            <li><a href="#bezpieczenstwo" class="hover:text-slate-900 dark:hover:text-white transition-colors">Polityka retencji (30 minut)</a></li>
+            <li><a href="#faq" class="hover:text-slate-900 dark:hover:text-white transition-colors">Najczęstsze pytania (FAQ)</a></li>
+          </ul>
+        </div>
+
+        <!-- Informacje formalne (pola do uzupełnienia przez właściciela) -->
+        <div>
+          <div class="font-semibold text-sm text-slate-900 dark:text-white mb-3">Dane serwisu</div>
+          <div class="space-y-1.5 text-[11px] text-slate-500">
+            <div>Właściciel: <span class="text-slate-700 dark:text-slate-300">[Nazwa Przedsiębiorcy / Właściciela]</span></div>
+            <div>Adres: <span class="text-slate-700 dark:text-slate-300">[Ulica, Kod Pocztowy, Miejscowość]</span></div>
+            <div>NIP / REGON: <span class="text-slate-700 dark:text-slate-300">[Numer Identyfikacji Podatkowej]</span></div>
+            <div>Kontakt: <span class="text-slate-700 dark:text-slate-300">[kontakt@twojadomena.pl]</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
+        <div>© 2026 Polski Konwerter. Wszelkie prawa zastrzeżone.</div>
+        <div>Standard bezpieczeństwa Zero-Trust • Zgodność z RODO</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Skrypt logiki użytkowej -->
+  <script src="./js/polski-konwerter-v2.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) window.lucide.createIcons();
+    });
+  </script>
+
+</body>
+</html>
